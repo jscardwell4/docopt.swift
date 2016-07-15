@@ -16,7 +16,7 @@ class DocoptTests: XCTestCase {
     
     func testPatternFlat() {
         XCTAssertEqual(Required([OneOrMore(Argument("N")), Option("-a"), Argument("M")]).flat(), [Argument("N"), Option("-a"), Argument("M")])
-        XCTAssertEqual(Required([Optional(OptionsShortcut()), Optional(Option("-a"))]).flat(OptionsShortcut), [OptionsShortcut()])
+        XCTAssertEqual(Required([Optional(OptionsShortcut()), Optional(Option("-a"))]).flat(OptionsShortcut.self), [OptionsShortcut()])
     }
 
     func testParseDefaults() {
@@ -338,7 +338,7 @@ class DocoptTests: XCTestCase {
     func testDocopt() {
         let doc = "Usage: prog [-v] A\n\n           Options: -v  Be verbose."
         let result = Docopt(doc, argv: ["arg"]).result
-        XCTAssertEqual(result.description, ["-v": false, "A": "arg"].description)
+        XCTAssertEqual(result?.description, ["-v": false, "A": "arg"].description)
     }
 }
 

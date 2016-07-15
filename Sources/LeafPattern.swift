@@ -11,7 +11,7 @@ import Foundation
 typealias SingleMatchResult = (position: Int, match: Pattern?)
 
 enum ValueType {
-    case Nil, Bool, Int, List, String
+    case `nil`, bool, int, list, string
 }
 
 internal class LeafPattern : Pattern {
@@ -20,27 +20,27 @@ internal class LeafPattern : Pattern {
         willSet {
             switch newValue {
             case is Bool:
-                valueType = valueType != .Int ? .Bool : valueType
+                valueType = valueType != .int ? .bool : valueType
             case is [String]:
-                valueType = .List
+                valueType = .list
             case is String:
-                valueType = .String
+                valueType = .string
             case is Int:
-                valueType = .Int // never happens. Set manually when explicitly set value to int :(
+                valueType = .int // never happens. Set manually when explicitly set value to int :(
             default:
-                valueType = .Nil
+                valueType = .nil
             }
         }
     }
-    var valueType: ValueType = .Nil
+    var valueType: ValueType = .nil
     override var description: String {
         get {
             switch valueType {
-            case .Bool: return "LeafPattern(\(name), \(value as! Bool))"
-            case .List: return "LeafPattern(\(name), \(value as! [String]))"
-            case .String: return "LeafPattern(\(name), \(value as! String))"
-            case .Int: return "LeafPattern(\(name), \(value as! Int))"
-            case .Nil: fallthrough
+            case .bool: return "LeafPattern(\(name), \(value as! Bool))"
+            case .list: return "LeafPattern(\(name), \(value as! [String]))"
+            case .string: return "LeafPattern(\(name), \(value as! String))"
+            case .int: return "LeafPattern(\(name), \(value as! Int))"
+            case .nil: fallthrough
             default: return "LeafPattern(\(name), \(value))"
             }
             
@@ -59,7 +59,7 @@ internal class LeafPattern : Pattern {
         return []
     }
     
-    override func match<T: Pattern>(left: [T], collected clld: [T]? = nil) -> MatchResult {
+    override func match<T: Pattern>(_ left: [T], collected clld: [T]? = nil) -> MatchResult {
         let collected: [Pattern] = clld ?? []
         let (pos, mtch) = singleMatch(left)
         
@@ -69,7 +69,7 @@ internal class LeafPattern : Pattern {
         let match = mtch as! LeafPattern
         
         var left_ = left
-        left_.removeAtIndex(pos)
+        left_.remove(at: pos)
         
         var sameName = collected.filter({ item in
             if let cast = item as? LeafPattern {
@@ -78,9 +78,9 @@ internal class LeafPattern : Pattern {
             return false
         }) as! [LeafPattern]
         
-        if (valueType == .Int) || (valueType == .List) {
+        if (valueType == .int) || (valueType == .list) {
             var increment: AnyObject? = 1
-            if valueType != .Int {
+            if valueType != .int {
                 increment = match.value
                 if let val = match.value as? String {
                     increment = [val]
@@ -93,7 +93,7 @@ internal class LeafPattern : Pattern {
             }
             if let inc = increment as? Int {
                 sameName[0].value = sameName[0].value as! Int + inc
-                sameName[0].valueType = .Int
+                sameName[0].valueType = .int
             } else if let inc = increment as? [String] {
                 sameName[0].value = ((sameName[0].value as? [String]) ?? [String]()) + inc
             }

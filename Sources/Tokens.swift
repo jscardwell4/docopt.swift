@@ -14,7 +14,7 @@ internal class Tokens: Equatable, CustomStringConvertible {
     
     var description: String {
         get {
-            return tokensArray.joinWithSeparator(" ")
+            return tokensArray.joined(separator: " ")
         }
     }
 
@@ -28,8 +28,8 @@ internal class Tokens: Equatable, CustomStringConvertible {
         self.error = error
     }
     
-    static func fromPattern(source: String) -> Tokens {
-        let res = source.stringByReplacingOccurrencesOfString("([\\[\\]\\(\\)\\|]|\\.\\.\\.)", withString: " $1 ", options: .RegularExpressionSearch)
+    static func fromPattern(_ source: String) -> Tokens {
+        let res = source.replacingOccurrences(of: "([\\[\\]\\(\\)\\|]|\\.\\.\\.)", with: " $1 ", options: .regularExpression)
         let result = res.split("\\s+|(\\S*<.*?>)").filter { !$0.isEmpty }
         return Tokens(result, error: DocoptLanguageError())
     }
@@ -42,11 +42,11 @@ internal class Tokens: Equatable, CustomStringConvertible {
         return tokensArray[0]
     }
     
-    func move() -> String? {
+  @discardableResult func move() -> String? {
         if tokensArray.isEmpty {
             return nil
         }
-        return tokensArray.removeAtIndex(0)
+        return tokensArray.remove(at: 0)
     }
 }
 

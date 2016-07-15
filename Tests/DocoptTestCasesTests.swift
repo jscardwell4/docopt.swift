@@ -15,11 +15,11 @@ class DocoptTestCasesTests: XCTestCase {
     }
 
     func testTestCasesFileExists() {
-        let fileManager: NSFileManager = NSFileManager.defaultManager()
+        let fileManager: FileManager = FileManager.default
         let filePath: String? = fixturesFilePath()
         XCTAssertNotNil(filePath, "Fixtures file testcases.docopt does not exist in testing bundle")
         if let filePath = filePath {
-            let exists: Bool = fileManager.fileExistsAtPath(filePath)
+            let exists: Bool = fileManager.fileExists(atPath: filePath)
             XCTAssertTrue(exists, "Fixtures file testcases.docopt does not exist in testing bundle")
         }
     }
@@ -36,7 +36,7 @@ class DocoptTestCasesTests: XCTestCase {
             let expectedOutput: AnyObject = testCase.expectedOutput
             var result: AnyObject = "user-error"
             let capture = NMBExceptionCapture(handler: nil, finally: nil)
-            capture.tryBlock {
+            capture?.try {
                 result = Docopt(testCase.usage, argv: testCase.arguments).result
             }
 
@@ -55,13 +55,13 @@ class DocoptTestCasesTests: XCTestCase {
     }
     
     private func fixturesFilePath() -> String? {
-        let testBundle: NSBundle = NSBundle(forClass: self.dynamicType)
+        let testBundle: Bundle = Bundle(for: self.dynamicType)
         return testBundle.pathForResource("testcases", ofType: "docopt")
     }
     
     private func fixturesFileContents() -> String {
         if let filePath = self.fixturesFilePath() {
-            let fileContents = try! String(contentsOfFile: filePath, encoding: NSUTF8StringEncoding)
+            let fileContents = try! String(contentsOfFile: filePath, encoding: String.Encoding.utf8)
             return fileContents
         }
         return ""

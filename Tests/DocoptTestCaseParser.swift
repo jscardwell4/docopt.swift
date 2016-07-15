@@ -16,7 +16,7 @@ public struct DocoptTestCaseParser {
         testCases = parse(stringOfTestCases)
     }
     
-    private func parse(stringOfTestCases: String) -> [DocoptTestCase] {
+    private func parse(_ stringOfTestCases: String) -> [DocoptTestCase] {
         let fixturesWithCommentsStripped: String = removeComments(stringOfTestCases)
         let fixtures: [String] = parseFixtures(fixturesWithCommentsStripped)
         let testCases: [DocoptTestCase] = parseFixturesArray(fixtures)
@@ -24,18 +24,18 @@ public struct DocoptTestCaseParser {
         return testCases
     }
     
-    private func removeComments(string: String) -> String {
-        let removeCommentsRegEx = try! NSRegularExpression(pattern: "(?m)#.*$", options: [])
+    private func removeComments(_ string: String) -> String {
+        let removeCommentsRegEx = try! RegularExpression(pattern: "(?m)#.*$", options: [])
         let fullRange: NSRange = NSMakeRange(0, string.characters.count)
-        return removeCommentsRegEx.stringByReplacingMatchesInString(string, options: [], range: fullRange, withTemplate: "")
+        return removeCommentsRegEx.stringByReplacingMatches(in: string, options: [], range: fullRange, withTemplate: "")
     }
     
-    private func parseFixtures(fixturesString: String) -> [String] {
-        let fixtures: [String] = fixturesString.componentsSeparatedByString("r\"\"\"")
+    private func parseFixtures(_ fixturesString: String) -> [String] {
+        let fixtures: [String] = fixturesString.split("r\"\"\"")
         return fixtures.filter { !$0.strip().isEmpty }
     }
     
-    private func parseFixturesArray(fixtureStrings: [String]) -> [DocoptTestCase] {
+    private func parseFixturesArray(_ fixtureStrings: [String]) -> [DocoptTestCase] {
         var allTestCases = [DocoptTestCase]()
         let testBaseName: String = "Test"
         var testIndex: Int = 1
@@ -43,7 +43,7 @@ public struct DocoptTestCaseParser {
             let newTestCases: [DocoptTestCase] = testCasesFromFixtureString(fixtureString)
             for testCase: DocoptTestCase in newTestCases {
                 testCase.name = testBaseName + String(testIndex)
-                testIndex++
+                testIndex += 1
             }
             
             allTestCases += newTestCases
@@ -52,9 +52,9 @@ public struct DocoptTestCaseParser {
         return allTestCases
     }
     
-    private func testCasesFromFixtureString(fixtureString: String) -> [DocoptTestCase] {
+    private func testCasesFromFixtureString(_ fixtureString: String) -> [DocoptTestCase] {
         var testCases = [DocoptTestCase]()
-        let fixtureComponents: [String] = fixtureString.componentsSeparatedByString("\"\"\"")
+        let fixtureComponents: [String] = fixtureString.split("\"\"\"")
         assert(fixtureComponents.count == 2, "Could not split fixture: \(fixtureString) into components")
         let usageDoc: String = fixtureComponents[0]
         let testInvocationString: String = fixtureComponents[1]
@@ -71,26 +71,26 @@ public struct DocoptTestCaseParser {
         return testCases
     }
     
-    private func parseTestCase(invocationString: String) -> DocoptTestCase? {
+    private func parseTestCase(_ invocationString: String) -> DocoptTestCase? {
         let trimmedTestInvocation: String = invocationString.strip()
-        var testInvocationComponents: [String] = trimmedTestInvocation.componentsSeparatedByString("\n")
+        var testInvocationComponents: [String] = trimmedTestInvocation.split("\n")
         assert(testInvocationComponents.count >= 2, "Could not split test case: \(trimmedTestInvocation) into components")
         
-        let input: String = testInvocationComponents.removeAtIndex(0) // first line
-        let expectedOutput: String = testInvocationComponents.joinWithSeparator("\n") // all remaining lines
+        let input: String = testInvocationComponents.remove(at: 0) // first line
+        let expectedOutput: String = testInvocationComponents.joined(separator: "\n") // all remaining lines
         
-        var inputComponents: [String] = input.componentsSeparatedByString(" ")
-        let programName: String = inputComponents.removeAtIndex(0) // first part
+        var inputComponents: [String] = input.split(" ")
+        let programName: String = inputComponents.remove(at: 0) // first part
         
         var error : NSError?
-        let jsonData: NSData? = expectedOutput.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        let jsonData: Data? = expectedOutput.data(using: String.Encoding.utf8, allowLossyConversion: false)
         if jsonData == nil {
             NSLog("Error parsing \(expectedOutput) to JSON: \(error)")
             return nil
         }
         let expectedOutputJSON: AnyObject?
         do {
-            expectedOutputJSON = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: .AllowFragments)
+          expectedOutputJSON = try JSONSerialization.jsonObject(with: jsonData! as Data, options: .allowFragments)
         } catch let error1 as NSError {
             error = error1
             expectedOutputJSON = nil
@@ -103,8 +103,8 @@ public struct DocoptTestCaseParser {
         return DocoptTestCase(programName, arguments: inputComponents, expectedOutput: expectedOutputJSON!)
     }
     
-    private func parseTestInvocations(stringOfTestInvocations: String) -> [String] {
-        let testInvocations: [String] = stringOfTestInvocations.componentsSeparatedByString("$ ")
+    private func parseTestInvocations(_ stringOfTestInvocations: String) -> [String] {
+        let testInvocations: [String] = stringOfTestInvocations.split("$ ")
         return testInvocations.filter { !$0.strip().isEmpty }
     }
 }
