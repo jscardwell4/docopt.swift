@@ -171,13 +171,13 @@
 		3C59003D1C6E7497001E335F /* BranchPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BranchPattern.swift; sourceTree = "<group>"; };
 		3C59003E1C6E7497001E335F /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		3C59003F1C6E7497001E335F /* Docopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Docopt.h; sourceTree = "<group>"; };
-		3C5900401C6E7497001E335F /* Docopt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Docopt.swift; sourceTree = "<group>"; };
+		3C5900401C6E7497001E335F /* Docopt.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = Docopt.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3C5900411C6E7497001E335F /* DocoptError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocoptError.swift; sourceTree = "<group>"; };
 		3C5900421C6E7497001E335F /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		3C5900451C6E7497001E335F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3C5900461C6E7497001E335F /* LeafPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafPattern.swift; sourceTree = "<group>"; };
+		3C5900461C6E7497001E335F /* LeafPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LeafPattern.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3C5900471C6E7497001E335F /* OneOrMore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneOrMore.swift; sourceTree = "<group>"; };
-		3C5900481C6E7497001E335F /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
+		3C5900481C6E7497001E335F /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3C5900491C6E7497001E335F /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		3C59004A1C6E7497001E335F /* OptionsShortcut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsShortcut.swift; sourceTree = "<group>"; };
 		3C59004B1C6E7497001E335F /* Pattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pattern.swift; sourceTree = "<group>"; };

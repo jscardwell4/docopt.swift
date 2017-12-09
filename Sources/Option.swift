@@ -32,6 +32,7 @@ internal class Option: LeafPattern {
     
     convenience init(_ option: Option) {
         self.init(option.short, long: option.long, argCount: option.argCount, value: option.value)
+        valueType = option.valueType
     }
     
     init(_ short: String? = nil, long: String? = nil, argCount: UInt = 0, value: AnyObject? = false as NSNumber) {
@@ -53,6 +54,7 @@ internal class Option: LeafPattern {
         var long: String? = nil
         var argCount: UInt = 0
         var value: AnyObject? = kCFBooleanFalse
+        var valueType: ValueType? = nil
         
         var (options, _, description) = optionDescription.strip().partition("  ")
         options = options.replacingOccurrences(of: ",", with: " ", options: [], range: nil)
@@ -63,7 +65,24 @@ internal class Option: LeafPattern {
                 long = s
             } else if s.hasPrefix("-") {
                 short = s
+            } else if s.hasPrefix("<") && s.hasSuffix(">") {
+                // Matched should be something like <id>. Check inside the brackets for a
+                // value type specifier.
+                let (_, _, type) = String(s.dropFirst().dropLast()).partition(":")
+                switch type {
+                    case "int", "Int", "integer", "Integer":
+                        valueType = .int
+                    case "string", "String":
+                        valueType = .string
+                    case "bool", "Bool", "boolean", "Boolean":
+                        valueType = .bool
+                    default:
+                        break
+                }
+                argCount = 1
+
             } else {
+                valueType = .string
                 argCount = 1
             }
         }
@@ -72,15 +91,28 @@ internal class Option: LeafPattern {
             let matched = description.findAll("\\[default: (.*)\\]", flags: .caseInsensitive)
             if matched.count > 0
             {
-                value =  matched[0] as AnyObject
+                switch valueType {
+                    case .int?:
+                        value = NSNumber(value: (matched[0] as NSString).integerValue)
+                    case .bool?:
+                        value = NSNumber(value: (matched[0] as NSString).boolValue)
+                    case .string?:
+                        value = matched[0] as NSString
+                    default:
+                        value =  matched[0] as AnyObject
+                    }
             }
             else
             {
                 value = nil
             }
         }
-        
-        return Option(short, long: long, argCount: argCount, value: value)
+
+        let option = Option(short, long: long, argCount: argCount, value: value)
+        if let valueType = valueType {
+            option.valueType = valueType
+        }
+        return option
     }
     
     override func singleMatch<T: LeafPattern>(_ left: [T]) -> SingleMatchResult {

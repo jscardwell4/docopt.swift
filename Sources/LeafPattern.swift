@@ -11,7 +11,7 @@ import Foundation
 typealias SingleMatchResult = (position: Int, match: Pattern?)
 
 enum ValueType {
-    case `nil`, bool, int, list, string
+    case `nil`, bool, int, count, list, string
 }
 
 internal class LeafPattern : Pattern {
@@ -23,27 +23,28 @@ internal class LeafPattern : Pattern {
             valueDescription = newValue.debugDescription
             switch newValue {
             case is Bool:
-                valueType = valueType != .int ? .bool : valueType
+                valueType = valueType == .`nil` ? .bool : valueType
             case is [String]:
                 valueType = .list
             case is String:
                 valueType = .string
             case is Int:
                 valueType = .int // never happens. Set manually when explicitly set value to int :(
+                                 // update: modifications by moondeer invalidate the above comment.
             default:
-                valueType = .nil
+                valueType = .`nil`
             }
         }
     }
-    var valueType: ValueType = .nil
+    var valueType: ValueType = .`nil`
     override var description: String {
         get {
             switch valueType {
             case .bool: return "LeafPattern(\(String(describing: name)), \(value as! Bool))"
             case .list: return "LeafPattern(\(String(describing: name)), \(value as! [String]))"
             case .string: return "LeafPattern(\(String(describing: name)), \(value as! String))"
-            case .int: return "LeafPattern(\(String(describing: name)), \(value as! Int))"
-            case .nil: fallthrough
+            case .int, .count: return "LeafPattern(\(String(describing: name)), \(value as! Int))"
+            case .`nil`: fallthrough
             default: return "LeafPattern(\(String(describing: name)), \(String(describing: value)))"
             }
             
@@ -84,9 +85,9 @@ internal class LeafPattern : Pattern {
             return false
         }) as! [LeafPattern]
         
-        if (valueType == .int) || (valueType == .list) {
+        if (valueType == .count) || (valueType == .list) {
             var increment: AnyObject? = 1 as NSNumber
-            if valueType != .int {
+            if valueType != .count {
                 increment = match.value
                 if let val = match.value as? String {
                     increment = [val] as NSArray
@@ -99,7 +100,7 @@ internal class LeafPattern : Pattern {
             }
             if let inc = increment as? Int {
                 sameName[0].value = (sameName[0].value as! Int + inc) as NSNumber
-                sameName[0].valueType = .int
+                sameName[0].valueType = .count
             } else if let inc = increment as? [String] {
                 sameName[0].value = (((sameName[0].value as? [String]) ?? [String]()) + inc) as NSArray
             }

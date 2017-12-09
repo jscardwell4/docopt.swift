@@ -21,7 +21,11 @@ open class Docopt : NSObject {
     @objc open static func parse(_ doc: String, argv: [String], help: Bool = false, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
         return Docopt(doc, argv: argv, help: help, version: version, optionsFirst: optionsFirst).result
     }
-    
+
+    @objc open static func parse(_ doc: String, help: Bool = false, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+      return Docopt(doc, help: help, version: version, optionsFirst: optionsFirst).result
+    }
+
     internal init(_ doc: String, argv: [String]? = nil, help: Bool = false, version: String? = nil, optionsFirst: Bool = false) {
         self.doc = doc
         self.version = version
@@ -162,7 +166,17 @@ open class Docopt : NSObject {
                 }
             }
             if tokens.error is DocoptExit {
-                o.value = value as AnyObject? ?? true as AnyObject
+              switch (o.valueType, value) {
+                  case (.int, let value?):
+                    o.value = NSNumber(value: (value as NSString).integerValue)
+                  case (.bool, let value?):
+                    o.value = NSNumber(value: (value as NSString).boolValue)
+                  case (.string, let value?):
+                    o.value = value as NSString
+                  default:
+                    o.value = value as AnyObject? ?? true as AnyObject
+              }
+
             }
         }
         return [o]
@@ -202,10 +216,19 @@ open class Docopt : NSObject {
                     left = ""
                 }
                 if tokens.error is DocoptExit {
+                    let valueType = o.valueType
                     o.value = true as AnyObject
-                    if let val = value
-                    {
-                        o.value = val as AnyObject
+                    switch (valueType, value) {
+                        case (.int, let value?):
+                            o.value = NSNumber(value: (value as NSString).integerValue)
+                        case (.bool, let value?):
+                            o.value = NSNumber(value: (value as NSString).boolValue)
+                        case (.string, let value?):
+                            o.value = value as NSString
+                        case (_, let value?):
+                            o.value = value as AnyObject
+                        default:
+                            break
                     }
                 }
             }

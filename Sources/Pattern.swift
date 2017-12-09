@@ -46,7 +46,7 @@ internal class Pattern: Equatable, Hashable, CustomStringConvertible {
                         }
                         if (e is Command) || ((e is Option) && (e as! Option).argCount == 0) {
                             e.value = 0 as AnyObject
-                            e.valueType = .int
+                            e.valueType = .count
                         }
                     }
                 }
