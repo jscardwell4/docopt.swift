@@ -11,7 +11,7 @@ import Foundation
 typealias SingleMatchResult = (position: Int, match: Pattern?)
 
 enum ValueType {
-    case `nil`, bool, int, count, list, string
+    case `nil`, bool, int, float, count, list, string
 }
 
 internal class LeafPattern : Pattern {
@@ -28,6 +28,8 @@ internal class LeafPattern : Pattern {
                 valueType = .list
             case is String:
                 valueType = .string
+            case is Float:
+                valueType = .float // Shouldn't happen
             case is Int:
                 valueType = .int // never happens. Set manually when explicitly set value to int :(
                                  // update: modifications by moondeer invalidate the above comment.
@@ -44,6 +46,7 @@ internal class LeafPattern : Pattern {
             case .list: return "LeafPattern(\(String(describing: name)), \(value as! [String]))"
             case .string: return "LeafPattern(\(String(describing: name)), \(value as! String))"
             case .int, .count: return "LeafPattern(\(String(describing: name)), \(value as! Int))"
+            case .float: return "LeafPattern(\(String(describing: name)), \(value as! Float))"
             case .`nil`: fallthrough
             default: return "LeafPattern(\(String(describing: name)), \(String(describing: value)))"
             }

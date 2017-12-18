@@ -72,6 +72,8 @@ internal class Option: LeafPattern {
                 switch type {
                     case "int", "Int", "integer", "Integer":
                         valueType = .int
+                    case "float", "Float":
+                         valueType = .float
                     case "string", "String":
                         valueType = .string
                     case "bool", "Bool", "boolean", "Boolean":

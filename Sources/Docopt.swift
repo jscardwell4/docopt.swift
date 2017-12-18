@@ -169,6 +169,8 @@ open class Docopt : NSObject {
               switch (o.valueType, value) {
                   case (.int, let value?):
                     o.value = NSNumber(value: (value as NSString).integerValue)
+                  case (.float, let value?):
+                    o.value = NSNumber(value: (value as NSString).floatValue)
                   case (.bool, let value?):
                     o.value = NSNumber(value: (value as NSString).boolValue)
                   case (.string, let value?):
@@ -221,6 +223,8 @@ open class Docopt : NSObject {
                     switch (valueType, value) {
                         case (.int, let value?):
                             o.value = NSNumber(value: (value as NSString).integerValue)
+                        case (.float, let value?):
+                            o.value = NSNumber(value: (value as NSString).floatValue)
                         case (.bool, let value?):
                             o.value = NSNumber(value: (value as NSString).boolValue)
                         case (.string, let value?):
