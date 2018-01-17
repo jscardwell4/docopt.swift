@@ -9,6 +9,14 @@
 import Foundation
 import Darwin
 
+public func parse(_ doc: String, argv: [String], help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    return Docopt(doc, argv: argv, help: help, version: version, optionsFirst: optionsFirst).result
+}
+
+public func parse(_ doc: String, help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    return Docopt(doc, help: help, version: version, optionsFirst: optionsFirst).result
+}
+
 @objc
 open class Docopt : NSObject {
     fileprivate(set) open var result: [String: AnyObject]!
@@ -18,15 +26,15 @@ open class Docopt : NSObject {
     fileprivate let optionsFirst: Bool
     fileprivate let arguments: [String]
     
-    @objc open static func parse(_ doc: String, argv: [String], help: Bool = false, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    @objc open static func parse(_ doc: String, argv: [String], help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
         return Docopt(doc, argv: argv, help: help, version: version, optionsFirst: optionsFirst).result
     }
 
-    @objc open static func parse(_ doc: String, help: Bool = false, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    @objc open static func parse(_ doc: String, help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
       return Docopt(doc, help: help, version: version, optionsFirst: optionsFirst).result
     }
 
-    internal init(_ doc: String, argv: [String]? = nil, help: Bool = false, version: String? = nil, optionsFirst: Bool = false) {
+    internal init(_ doc: String, argv: [String]? = nil, help: Bool = true, version: String? = nil, optionsFirst: Bool = false) {
         self.doc = doc
         self.version = version
         self.help = help
