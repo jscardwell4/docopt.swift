@@ -26,11 +26,11 @@ open class Docopt : NSObject {
     fileprivate let optionsFirst: Bool
     fileprivate let arguments: [String]
     
-    @objc open static func parse(_ doc: String, argv: [String], help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    @objc public static func parse(_ doc: String, argv: [String], help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
         return Docopt(doc, argv: argv, help: help, version: version, optionsFirst: optionsFirst).result
     }
 
-    @objc open static func parse(_ doc: String, help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
+    @objc public static func parse(_ doc: String, help: Bool = true, version: String? = nil, optionsFirst: Bool = false) -> [String: AnyObject] {
       return Docopt(doc, help: help, version: version, optionsFirst: optionsFirst).result
     }
 

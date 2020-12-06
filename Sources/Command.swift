@@ -13,10 +13,9 @@ internal class Command: Argument {
         super.init(name, value: value)
     }
 
-    override func singleMatch<T: LeafPattern>(_ left: [T]) -> SingleMatchResult {
+    override func singleMatch<T: Pattern>(_ left: [T]) -> SingleMatchResult {
         for i in 0..<left.count {
-            let pattern = left[i]
-            if pattern is Argument {
+            if let pattern = left[i] as? Argument {
                 if pattern.value as? String == self.name {
                     return (i, Command(self.name, value: true as AnyObject))
                 }

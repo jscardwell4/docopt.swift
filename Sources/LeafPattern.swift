@@ -62,7 +62,7 @@ internal class LeafPattern : Pattern {
         }
     }
     
-    override func flat<T: LeafPattern>(_: T.Type) -> [T] {
+    override func flat<T: Pattern>(_: T.Type) -> [T] {
         if let cast = self as? T {
             return [cast]
         }
@@ -81,7 +81,7 @@ internal class LeafPattern : Pattern {
         var left_ = left
         left_.remove(at: pos)
         
-        var sameName = collected.filter({ item in
+        let sameName = collected.filter({ item in
             if let cast = item as? LeafPattern {
                 return self.name == cast.name
             }

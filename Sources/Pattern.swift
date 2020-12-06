@@ -21,6 +21,11 @@ internal class Pattern: Equatable, Hashable, CustomStringConvertible {
             return "Pattern"
         }
     }
+
+    func hash(into hasher: inout Hasher) {
+      self.description.hash(into: &hasher)
+    }
+
     var hashValue: Int { get {
             return self.description.hashValue
         }
@@ -72,7 +77,7 @@ internal class Pattern: Equatable, Hashable, CustomStringConvertible {
             let child: BranchPattern? = children.filter({ self.isInParents($0) }).first as? BranchPattern
             
             if let child = child {
-                let index = children.index(of: child)!
+                let index = children.firstIndex(of: child)!
                 children.remove(at: index)
                 
                 if child is Either {

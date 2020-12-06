@@ -25,13 +25,13 @@ internal class BranchPattern : Pattern {
     }
     
     override func fixIdentities(_ unq: [LeafPattern]? = nil) {
-        var uniq: [LeafPattern] = unq ?? Array(Set(flat()))
+        let uniq: [LeafPattern] = unq ?? Array(Set(flat()))
         
         for i in 0..<children.count {
             let child = children[i]
             if let leafChild = child as? LeafPattern {
                 assert(uniq.contains(leafChild))
-                children[i] = uniq[uniq.index(of: leafChild)!]
+                children[i] = uniq[uniq.firstIndex(of: leafChild)!]
             } else {
                 child.fixIdentities(uniq)
             }
